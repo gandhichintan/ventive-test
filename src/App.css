@@ -1,0 +1,89 @@
+.App {
+  
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.App-left{
+  position: absolute;
+  width: 30%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  background: #070D59;
+  float: left;
+}
+
+.App-right{
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  float: right;
+}
+
+.App-right-header{
+  height: 100px;
+  padding: 10px 30px;
+}
+
+.btn-upload{
+  position: absolute;
+  width: 305px;
+  height: 70px;
+  left: 39px;
+  top: 987px;
+
+  background: #F7B633;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.left-logo{
+
+}
+
+.selected{
+  position: absolute;
+width: 344px;
+height: 82px;
+left: 20px;
+top: 416px;
+
+background: #5893D4;
+opacity: 0.2;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 15px;
+}
+
+.document{
+  position: absolute;
+width: 634px;
+height: 802px;
+left: 463.16px;
+top: 158px;
+
+background: #FFFFFF;
+border: 10px solid #FF0000;
+box-sizing: border-box;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
