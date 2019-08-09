@@ -32,21 +32,18 @@ class App extends Component {
     this.listFiles();
     var self = this;
 
-    setTimeout(() => {
-      var labels = document.getElementsByTagName('label');
-      for (var i = 0; i < labels.length; i++) {
-        labels[i].addEventListener("click", function (event) {
-          self.showFile(event);
-        });
-      }
-    }, 1000);
-
     var div = document.getElementById('pdf-view');
     var pdfView = '<webview id="file-box" src="" plugins={this.props.enablePlugin} style="width: 500px; height:650px;"></webview>';
     div.innerHTML = pdfView;
+
+    if (!fs.existsSync(destination)) {
+      fs.mkdirSync(destination);
+    }
+
   }
 
   uploadFile = function () {
+    var self = this;
     dialog.showOpenDialog(function (filePaths) {
       if (filePaths === undefined) {
         return;
@@ -61,6 +58,7 @@ class App extends Component {
         fs.readFile(filePath, (err, data) => {
           if (err) throw err;
           fs.writeFileSync(destination + '\\' + filename, data, 'binary');
+          self.listFiles();
         });
 
       } catch (err) {
@@ -74,7 +72,7 @@ class App extends Component {
     var div = document.getElementById('file-list');
     div.innerHTML = "";
     fs.readdir(destination, function (err, dir) {
-      
+
       for (var i = 0, l = dir.length; i < l; i++) {
         var filename = dir[i];
 
@@ -86,7 +84,18 @@ class App extends Component {
         div.innerHTML += element;
       }
 
+      setTimeout(() => {
+        var labels = document.getElementsByTagName('label');
+        for (var i = 0; i < labels.length; i++) {
+          labels[i].addEventListener("click", function (event) {
+            self.showFile(event);
+          });
+        }
+      }, 2000);
+      
     });
+
+
   }
 
   showFile = function (event) {
