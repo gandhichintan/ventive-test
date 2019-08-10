@@ -69,13 +69,13 @@ class App extends Component {
     });
   }
 
-  getFileName = function (path) {
+  getFileName = function (url) {
     var name = "";
     if (window.navigator.userAgent.indexOf("Windows NT") != -1) {
-      var parts = path.split('\\');
+      var parts = url.split('\\');
       name = parts[parts.length - 1];
     } else {
-      name = path.basename(path);
+      name = path.basename(url);
     }
     return name;
   }
