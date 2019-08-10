@@ -4,9 +4,11 @@ import './App.css';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
+const path = require('path');
+
 const app = electron.remote.app;
 const { dialog } = electron.remote;
-const destination = app.getAppPath() + '\\upload';
+const destination = path.join(app.getAppPath(),'upload');
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +35,7 @@ class App extends Component {
     var self = this;
 
     var div = document.getElementById('pdf-view');
-    var pdfView = '<webview id="file-box" src="" plugins={this.props.enablePlugin} style="width: 500px; height:650px;"></webview>';
+    var pdfView = '<webview id="file-box" src="" plugins={this.props.enablePlugin} nodeIntegration={this.props.enablePlugin} style="width: 500px; height:650px;"></webview>';
     div.innerHTML = pdfView;
 
     if (!fs.existsSync(destination)) {
@@ -50,14 +52,13 @@ class App extends Component {
       }
 
       var filePath = filePaths[0];
-      var source = filePath.split('\\');
-      var filename = source[source.length - 1]
+      var filename = path.basename(filePath);
 
       try {
         console.log('Loaded file:' + filePath)
         fs.readFile(filePath, (err, data) => {
           if (err) throw err;
-          fs.writeFileSync(destination + '\\' + filename, data, 'binary');
+          fs.writeFileSync( path.join(destination,filename), data, 'binary');
           self.listFiles();
         });
 
@@ -77,7 +78,7 @@ class App extends Component {
         for (var i = 0, l = dir.length; i < l; i++) {
           var filename = dir[i];
 
-          var filepath = destination + '\\' + filename;
+          var filepath = path.join(destination,filename);
 
           var name = filename.split('.pdf')[0];
           var element = '<div className="form-group"><label className="control-label" style="lineheight:5;" id=' + filepath.replace(" ","_") + '>' + name + '</label></div>';
@@ -103,11 +104,10 @@ class App extends Component {
   showFile = function (event) {
     var self = this;
     self.filePath = event.target.attributes["id"].value;
-
-    var source = self.filePath.split('\\');
-    self.selectedFile = source[source.length - 1]
+    var data = fs.readFileSync(self.filePath,{ encoding: 'base64' });
+    self.selectedFile = path.basename(self.filePath,);
     var box = document.getElementById('file-box');
-    box.setAttribute("src", self.filePath.replace("_"," "));
+    box.setAttribute("src", "data:application/pdf;base64,"+data);
 
     self.setState({ active: !this.state.active });
   }
