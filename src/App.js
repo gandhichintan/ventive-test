@@ -73,26 +73,28 @@ class App extends Component {
     div.innerHTML = "";
     fs.readdir(destination, function (err, dir) {
 
-      for (var i = 0, l = dir.length; i < l; i++) {
-        var filename = dir[i];
+      if (dir != null) {
+        for (var i = 0, l = dir.length; i < l; i++) {
+          var filename = dir[i];
 
-        var filepath = destination + '\\' + filename;
+          var filepath = destination + '\\' + filename;
 
-        var name = filename.split('.pdf')[0];
-        var element = '<div className="form-group"><label className="control-label" id=' + filepath + '>' + name + '</label></div>';
+          var name = filename.split('.pdf')[0];
+          var element = '<div className="form-group"><label className="control-label" id=' + filepath + '>' + name + '</label></div>';
 
-        div.innerHTML += element;
+          div.innerHTML += element;
+        }
+
+        setTimeout(() => {
+          var labels = document.getElementsByTagName('label');
+          for (var i = 0; i < labels.length; i++) {
+            labels[i].addEventListener("click", function (event) {
+              self.showFile(event);
+            });
+          }
+        }, 2000);
       }
 
-      setTimeout(() => {
-        var labels = document.getElementsByTagName('label');
-        for (var i = 0; i < labels.length; i++) {
-          labels[i].addEventListener("click", function (event) {
-            self.showFile(event);
-          });
-        }
-      }, 2000);
-      
     });
 
 
