@@ -80,7 +80,7 @@ class App extends Component {
           var filepath = destination + '\\' + filename;
 
           var name = filename.split('.pdf')[0];
-          var element = '<div className="form-group"><label className="control-label" id=' + filepath + '>' + name + '</label></div>';
+          var element = '<div className="form-group"><label className="control-label" style="lineheight:5;" id=' + filepath.replace(" ","_") + '>' + name + '</label></div>';
 
           div.innerHTML += element;
         }
@@ -107,7 +107,7 @@ class App extends Component {
     var source = self.filePath.split('\\');
     self.selectedFile = source[source.length - 1]
     var box = document.getElementById('file-box');
-    box.setAttribute("src", self.filePath);
+    box.setAttribute("src", self.filePath.replace("_"," "));
 
     self.setState({ active: !this.state.active });
   }
