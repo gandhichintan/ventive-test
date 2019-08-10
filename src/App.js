@@ -5,10 +5,11 @@ import './App.css';
 const fs = window.require('fs');
 const electron = window.require('electron');
 const path = require('path');
+const os = require('os');
 
 const app = electron.remote.app;
 const { dialog } = electron.remote;
-const destination = path.join(app.getAppPath(),'upload');
+const destination = window.navigator.userAgent.indexOf("Windows NT") != -1 ? app.getAppPath() + '\\upload' : path.join(app.getAppPath(), 'upload');
 
 class App extends Component {
   constructor(props) {
@@ -51,14 +52,14 @@ class App extends Component {
         return;
       }
 
-      var filePath = filePaths[0];
-      var filename = path.basename(filePath);
+      var filePath = path.normalize(filePaths[0]);
+      var filename = self.getFileName(filePath);
 
       try {
         console.log('Loaded file:' + filePath)
         fs.readFile(filePath, (err, data) => {
           if (err) throw err;
-          fs.writeFileSync( path.join(destination,filename), data, 'binary');
+          fs.writeFileSync(path.join(destination, filename), data, 'binary');
           self.listFiles();
         });
 
@@ -66,6 +67,17 @@ class App extends Component {
         console.log('Error reading the file: ' + JSON.stringify(err));
       }
     });
+  }
+
+  getFileName = function (path) {
+    var name = "";
+    if (window.navigator.userAgent.indexOf("Windows NT") != -1) {
+      var parts = path.split('\\');
+      name = parts[parts.length - 1];
+    } else {
+      name = path.basename(path);
+    }
+    return name;
   }
 
   listFiles = function () {
@@ -78,10 +90,10 @@ class App extends Component {
         for (var i = 0, l = dir.length; i < l; i++) {
           var filename = dir[i];
 
-          var filepath = path.join(destination,filename);
+          var filepath = path.join(destination, filename);
 
           var name = filename.split('.pdf')[0];
-          var element = '<div className="form-group"><label className="control-label" style="lineheight:5;" id=' + filepath.replace(" ","_") + '>' + name + '</label></div>';
+          var element = '<div className="form-group"><label className="control-label" style="lineheight:5;" id=' + filepath.replace(" ", "_") + '>' + name + '</label></div>';
 
           div.innerHTML += element;
         }
@@ -104,10 +116,10 @@ class App extends Component {
   showFile = function (event) {
     var self = this;
     self.filePath = event.target.attributes["id"].value;
-    var data = fs.readFileSync(self.filePath,{ encoding: 'base64' });
-    self.selectedFile = path.basename(self.filePath,);
+    var data = fs.readFileSync(self.filePath, { encoding: 'base64' });
+    self.selectedFile = path.basename(self.filePath);
     var box = document.getElementById('file-box');
-    box.setAttribute("src", "data:application/pdf;base64,"+data);
+    box.setAttribute("src", "data:application/pdf;base64," + data);
 
     self.setState({ active: !this.state.active });
   }
